@@ -1,0 +1,15 @@
+﻿@{
+    string layout = "";
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
+
+    switch (controller.ToLower())
+    {
+        case "admin":
+            layout = "~/Views/Shared/_AdminLayout.cshtml";
+            break;
+        default:
+            layout = "~/Views/Shared/_Layout.cshtml";
+            break;
+    }
+    Layout = layout;
+}

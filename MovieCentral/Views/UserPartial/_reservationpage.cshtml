@@ -1,0 +1,102 @@
+﻿@model MovieCentral.Models.reservationVModel
+@{
+    int checkrow = 1;
+    List<string> seatnames = new List<string>();
+}
+<ul class="showcase">
+    <li>
+        <div class="seat"></div>
+        <small class="text-white">Available</small>
+    </li>
+    <li>
+        <div class="seat selected"></div>
+        <small class="text-white">Selected</small>
+    </li>
+    <li>
+        <div class="seat sold"></div>
+        <small class="text-white">Occupied</small>
+    </li>
+</ul>
+<div class="auditorium-container">
+    <div class="screen my-5 mx-auto"></div>
+    @*@for (int i = 1; i <= Model.rows; i++)
+    {
+        <div class="row justify-content-center">
+            @for (int j = 1; j <= Model.spr; j++)
+            {
+                <div class="seat"></div>
+            }
+        </div>
+    }*@
+    @while (checkrow <= Model.rows)
+    {
+        <div class="row justify-content-center">
+            @foreach (var item in Model.seats.Where(u => u.Number == checkrow).ToList())
+            {
+                if (seatnames.Contains(item.Name))
+                {
+                    break;
+                }
+                if (item.Occupied)
+                {
+                    <div class="seat sold" data-id="@item.Id" data-number="@item.Number" data-seatname="@item.Name">@item.Name</div>
+                }
+                else
+                {
+                    <div class="seat" data-id="@item.Id" data-number="@item.Number" data-seatname="@item.Name">@item.Name</div>
+                }
+                seatnames.Add(item.Name);
+            }
+        </div>
+        seatnames.Clear();
+        checkrow++;
+    }
+</div>
+
+<p class="text text-center text-white">
+    You have selected <span id="count">0</span> seat for a price of PHP<span id="total">0.00</span>
+</p>
+<div class="text-center mb-5">
+    <button class="btn btn-outline-warning" id="confirm-seat">Confirm Seats</button>
+</div>
+<div class="text-center mb-5">
+    <p class="text-warning d-none" id="confirm-error"></p>
+</div>
+
+<script src="~/Scripts/js/reservationpage.js"></script>
+<script>
+    let selected_seats = "";
+    let haveselected = false;
+    //reservationconfirmModal
+    $('.seat').not('.sold').click(function () {
+        selected_seats = "";
+        selected_seat_ids = "";
+        haveselected = false;
+        $(this).toggleClass('selected-seat');
+        $('.selected-seat').each(function () {
+            selected_seats += $(this).attr('data-number') + $(this).attr('data-seatname') + ",";
+            selected_seat_ids += $(this).attr('data-id')+",";
+            haveselected = true;
+        });
+        if (!$('#confirm-error').hasClass('d-none')) {
+            $('#confirm-error').addClass('d-none');
+        }
+    })
+    $('#confirm-seat').click(function () {
+        if (!haveselected) {
+            $('#confirm-error').html("<mark>You haven't selected a seat yet.</mark>");
+            $('#confirm-error').removeClass('d-none');
+            return false;
+        }
+        let seats_selected = selected_seats.substr(0, selected_seats.length - 1);
+        let seatids_selected = selected_seat_ids.substr(0, selected_seat_ids.length - 1);
+        $('#selected-seats-to-confirm').html("Selected Seat(s) : " + seats_selected);
+        $('#selected-seats-to-confirm').attr("data-seats", seatids_selected);
+        $('#selected-seats-to-confirm').attr("data-seat-names", seats_selected);
+        $('#selected-seats-total').text("Total price: ₱" + $('#total').text());
+        $('#selected-schedule').text("Schedule: " + "@Model.showtime");
+        $('#selected-schedule').attr("data-schedule","@Model.schedId");
+        $('#reservationconfirmModal').modal('toggle');
+    });
+
+</script>

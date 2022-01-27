@@ -1,0 +1,38 @@
+﻿@model IEnumerable<MovieCentral.Models.movieSchedModel>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <th class="m_title" scope="row">@x.TimeStart</th>
+                <td class="m_desc" style="width:50%;">@x.TimeEnd</td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-primary edit-movie" data-id="@x.Id"><i class="bi bi-pencil-square"></i>Edit</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document.body).on('click', '.edit-movie', function () {
+        let imgPath = $(this).attr("data-img");
+        $('#movieform').attr("action", "UpdateMovie");
+        $('.submit-form').text("Update");
+        $('#cancel-submit').removeClass("d-none");
+        $('#mId').val($(this).attr("data-id"));
+        $('.mname').val($(this).attr("data-name"));
+        $('.movie-img').attr("src", imgPath);
+        $('.movie-img').attr("alt", $(this).attr("data-name"));
+        $('.mdesc').val($(this).attr("data-desc"));
+    });
+</script>
+

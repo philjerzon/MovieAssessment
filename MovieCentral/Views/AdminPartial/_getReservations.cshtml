@@ -1,0 +1,62 @@
+﻿@model MovieCentral.Models.reservationListVModel
+
+<table class="table table-bordered table-hover bg-white">
+    <thead>
+        <tr>
+            <th scope="col">
+                <div class="form-check">
+                    <input class="form-check-input check-all" type="checkbox" value="">
+                </div>
+            </th>
+            <th scope="col">Movie</th>
+            <th scope="col">Scheduled Time</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Seats</th>
+            <th scope="col">Reservation Date</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.myreservations)
+        {
+            <tr>
+                <th scope="row">
+                    <div class="form-check">
+                        @if (item.show_time < DateTime.Now)
+                        {
+                            <input class="form-check-input rowcheck-disabled" type="checkbox" disabled value="">
+                        }
+                        else { 
+                            <input class="form-check-input rowcheck" type="checkbox" value="@item.reservation_id">
+                        }
+                    </div>
+                </th>
+                <th>@item.moviename</th>
+                <td>@item.show_time</td>
+                <td>@item.customer</td>
+                <td data-ids="@item.reserved_seat_ids">@item.reserved_seats</td>
+                <td>@item.reservation_date</td>
+                @if (item.status == 1)
+                {
+                    <td>Reserved</td>
+                }
+                else if (item.status == 2)
+                {
+                    <td>Used</td>
+                }
+                else
+                {
+                    <td>Cancelled</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('.check-all').change(function () {
+        let isChecked = $(this).is(':checked');
+        $('.rowcheck').each(function (e) {
+            $(this).prop("checked", isChecked)
+        })
+    });
+</script>

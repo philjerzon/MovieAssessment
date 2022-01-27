@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Movies";
+}
+<div class="container-fluid">
+    <div id="_listofshowing" class="row my-5"></div>
+</div>
+@section scripts{
+<script>
+    $("#_listofshowing").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+    $("#_listofshowing").load("/userpartial/_MoviePosters");
+</script>
+}
+

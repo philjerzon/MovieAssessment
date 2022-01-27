@@ -1,0 +1,129 @@
+﻿@model MovieCentral.Models.ScheduleWithSeats
+
+@if (Model != null)
+{
+<div class="row">
+    @if (Model.movieScheds != null)
+    {
+        var i = 1;
+        foreach (var items in Model.movieScheds)
+        {
+            if (items.TimeStart < DateTime.Now)
+            {
+                <div class="col-6 start-div">
+                    <label for="timestart" class="form-label">Start (@i)</label>
+                    <p class="d-none t_startval">@items.TimeStart.ToString("MM/dd/yyyy HH:mm:ss")</p>
+                    <input type="datetime-local" name="timestart" disabled readonly class="form-control t_start input-disabled" value="" required />
+                </div>
+                <div class="col-6 end-div">
+                    <label for="timeend" class="form-label">End (@i)</label>
+                    <p class="d-none t_endval">@items.TimeEnd.ToString("MM/dd/yyyy HH:mm:ss")</p>
+                    <input type="datetime-local" name="timeend" disabled readonly class="form-control t_end input-disabled" value="" required />
+                </div>
+                <div class="my-2"><hr /></div>
+            }
+            else
+            {
+                <div class="col-6 start-div">
+                    <label for="timestart" class="form-label">Start (@i)</label>
+                    <p class="d-none t_startval">@items.TimeStart.ToString("MM/dd/yyyy HH:mm:ss")</p>
+                    <input type="datetime-local" name="timestart" class="form-control t_start" value="" required />
+                </div>
+                <div class="col-6 end-div">
+                    <label for="timeend" class="form-label">End (@i)</label>
+                    <p class="d-none t_endval">@items.TimeEnd.ToString("MM/dd/yyyy HH:mm:ss")</p>
+                    <input type="datetime-local" name="timeend" class="form-control t_end" value="" min="@items.TimeStart.ToString("MM/dd/yyyy HH:mm:ss")" required />
+                </div>
+                <div class="my-2"><hr /></div>
+            }
+            i++;
+        }
+    }
+    @if (Model.isElapsed)
+    {
+        <div class="col-6">
+            <label for="rows" class="form-label">Rows</label>
+            <input type="number" class="form-control srows" disabled readonly name="rows" value="@Model.rows" />
+        </div>
+        <div class="col-6">
+            <label for="seats_per_row" class="form-label">Seats per row</label>
+            <input type="number" class="form-control spr" disabled readonly name="seats_per_row" value="@Model.seats" />
+        </div>
+        <div class="col-6">
+            <label for="seat_price" class="form-label">Price</label>
+            <input type="number" class="form-control sprice" disabled readonly name="seat_price" value="@Model.price" />
+        </div>
+    }
+    else
+    {
+        <div class="col-6">
+            <label for="rows" class="form-label">Rows</label>
+            <input type="number" class="form-control srows" name="rows" value="@Model.rows" />
+        </div>
+        <div class="col-6">
+            <label for="seats_per_row" class="form-label">Seats per row</label>
+            <input type="number" class="form-control spr" name="seats_per_row" value="@Model.seats" />
+        </div>
+        <div class="col-6">
+            <label for="seat_price" class="form-label">Price</label>
+            <input type="number" class="form-control sprice" name="seat_price" value="@Model.price" />
+        </div>
+    }
+
+    <div class="col-6">
+        <p class="text-danger d-none form-error whitespace"></p>
+    </div>
+</div>
+}
+else
+{
+    <div class="row">
+        <input type="hidden" id="movieID" class="movie-id" name="mId" />
+        @for (int i = 1; i <= 5; i++)
+        {
+            <div class="col-6">
+                <label for="timestart" class="form-label">Start (@i)</label>
+                <input type="datetime-local" name="timestart" class="form-control t_start" value="" required />
+            </div>
+            <div class="col-6 end-div">
+                <label for="timeend" class="form-label">End (@i)</label>
+                <input type="datetime-local" name="timeend" class="form-control t_end" value="" min="" required />
+            </div>
+            <div class="my-2"><hr /></div>
+        }
+        <div class="col-6">
+            <label for="rows" class="form-label">Rows</label>
+            <input type="number" class="form-control srows" name="rows" />
+        </div>
+        <div class="col-6">
+            <label for="seats_per_row" class="form-label">Seats per row</label>
+            <input type="number" class="form-control spr" name="seats_per_row" min="1" />
+        </div>
+        <div class="col-6">
+            <label for="seat_price" class="form-label">Price</label>
+            <input type="number" class="form-control sprice" name="seat_price" />
+        </div>
+        <div class="col-6">
+            <p class="text-danger d-none form-error whitespace"></p>
+        </div>
+    </div>
+}
+<script>
+    $('.t_startval').each(function () {
+        let converted = new Date($(this).text());
+        let converteddate = moment(converted).format("YYYY-MM-DDTHH:mm");
+        $(this).siblings('.t_start').val(converteddate);
+        //$(this).parent().find('.t_end').attr("min",converteddate);
+    });
+    $('.t_endval').each(function () {
+        let converted = new Date($(this).text());
+        let converteddate = moment(converted).format("YYYY-MM-DDTHH:mm:ss");
+        $(this).siblings('.t_end').val(converteddate);
+    });
+    $('.t_end').each(function () {
+        let converted = new Date($(this).attr("min"));
+        let converteddate = moment(converted).format("YYYY-MM-DDTHH:mm:ss");
+        $(this).attr('min', converteddate);
+    });
+</script>
+

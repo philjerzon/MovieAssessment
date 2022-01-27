@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Screening Time";
+}
+
+<div id="_listofschedules" class="mt-5"></div>
+
+@section scripts{
+    <script>
+        $("#_listofschedules").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+        $("#_listofschedules").load("/adminpartial/_schedules");
+        
+
+    </script>
+}

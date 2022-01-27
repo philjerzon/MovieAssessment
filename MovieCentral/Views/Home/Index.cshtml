@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="container-fluid">
+    <div class="row bg-white">
+        <div class="col-md-4 col-sm-12 text-center">
+            <h1 class="text-primary text-wrap" style="font-size: 6vw; margin-top: 12vh; ">
+                MOVIE CENTRAL
+            </h1>
+        </div>
+        <div class="col-md-8 col-sm-12 px-0">
+            <div class="w-100 mx-auto">
+                <div id="moviePosters" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#moviePosters" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#moviePosters" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#moviePosters" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" data-bs-interval="7000">
+                            <img src="~/movieposterimg/EternalsCarousel.jpg" alt="..." class="d-block">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="4000">
+                            <img src="~/movieposterimg/MortalKombat.jpg" alt="..." class="d-block">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="5000">
+                            <img src="~/movieposterimg/expendables2.jpg" alt="..." class="d-block">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#moviePosters" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#moviePosters" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="_listofshowing" class="row my-5"></div>
+    <div class="row my-5">
+
+    </div>
+
+</div>
+@section scripts{
+    <script>
+        $("#_listofshowing").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+        $("#_listofshowing").load("/userpartial/_MoviePosters");
+    </script>
+}

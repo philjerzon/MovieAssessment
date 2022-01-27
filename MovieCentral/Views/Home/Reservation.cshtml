@@ -1,0 +1,100 @@
+﻿@model MovieCentral.Models.MovieListsIndexModel
+
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="mx-auto w-75">
+        <div class="movie-container">
+            <label class="text-white"> Select Show Schedule:</label>
+            <select id="movie">
+                @foreach (var item in Model.movieLists)
+                {
+                    if (item.schedId != Model.schedId)
+                    {
+                        <option value="@item.price" data-id="@item.schedId">@item.movieName (₱@item.price) - @item.show_time</option>
+                    }
+                    else
+                    {
+                        <option value="@item.price" selected data-id="@item.schedId">@item.movieName (₱@item.price) - @item.show_time</option>
+                    }
+                }
+            </select>
+        </div>
+        <div id="_reservationseats"></div>
+    </div>
+</div>
+<div class="modal fade" id="reservationconfirmModal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title movie-title-modal">Confirm Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="mx-auto w-100">
+                        <div id="selected-seats-to-confirm" data-seats="">
+                        </div>
+                        <div id="selected-seats-total">
+                        </div>
+                        <div id="selected-schedule" data-schedule="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary submit-reservation">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            localStorage.clear()
+            let msched = 0;
+            $("#_reservationseats").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+            $('#movie').find('option[selected="selected"]').each(function () {
+                $(this).prop('selected', true);
+            });
+            msched = $("#movie").find(":selected").attr("data-id");
+            $("#_reservationseats").load("/userpartial/_reservationpage?sched=" + msched);
+
+            $("#movie").on('change', function () {
+                msched = $(this).find(":selected").attr("data-id");
+                window.location.href = "/home/reservation?mid=@Model.movieId&schedid=" + msched;
+            });
+            $('.submit-reservation').click(function () {
+                let seatids = $('#selected-seats-to-confirm').attr("data-seats");
+                let seatnames = $('#selected-seats-to-confirm').attr("data-seat-names");
+                let schedule = $('#selected-schedule').attr("data-schedule");
+                let customer_id = $('.user-info').attr("data-id");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AddReservation", "Home")',
+                    data: {
+                        'customer_id': customer_id,
+                        'schedule_id': schedule,
+                        'seatids': seatids,
+                        'seatnames': seatnames
+                    },
+                    datatype: "json",
+                    traditional: true,
+                    success: function (response) {
+                        window.location.href = response.redirectToUrl;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("jqXHR:" + jqXHR.status + " errorThrown: " + errorThrown);
+                    }
+                });
+
+
+            });
+        });
+    </script>
+}

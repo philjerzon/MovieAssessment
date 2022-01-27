@@ -1,0 +1,45 @@
+﻿@model IEnumerable<MovieCentral.Models.movieModel>
+<table class="table table-bordered table-hover bg-white">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <th class="m_title" scope="row">@x.Name</th>
+                <td class="m_desc" style="width:50%;">@x.Description</td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a href="#" class="btn btn-sm btn-primary edit-movie" data-id="@x.Id" data-name="@x.Name" data-desc="@x.Description" data-img="@x.ImagePath"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="#" class="btn btn-sm btn-primary archive-movie mx-2" data-id="@x.Id"><i class="bi bi-trash"></i> Delete</a>
+                        <a href="#" class="btn btn-sm btn-primary movie-schedules" data-bs-toggle="modal" data-bs-target="#schedmodal" data-id="@x.Id" data-name="@x.Name"><i class="bi bi-clock"></i> Schedules</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document.body).on('click', '.edit-movie', function () {
+        let imgPath = $(this).attr("data-img");
+        $('#movieform').attr("action", "UpdateMovie");
+        $('.submit-form').text("Update");
+        $('#cancel-submit').removeClass("d-none");
+        $('#mId').val($(this).attr("data-id"));
+        $('.mname').val($(this).attr("data-name"));
+        $('.movie-img').attr("src", imgPath);
+        $('.movie-img').attr("alt", $(this).attr("data-name"));
+        $('.mdesc').val($(this).attr("data-desc"));
+    });
+    $(document.body).on('click', '.movie-schedules', function () {
+        $("#_listofschedules").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+        $("#_listofschedules").load("/adminpartial/_getMovieSchedules?mid=" + $(this).attr("data-id"));
+        $('#movieID').val($(this).attr("data-id"));
+        $('.movie-title-modal').text("Schedules for " + $(this).attr("data-name"));
+    });
+</script>

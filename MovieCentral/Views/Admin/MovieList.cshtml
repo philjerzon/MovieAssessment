@@ -1,0 +1,178 @@
+﻿@model MovieCentral.Models.movieModel
+@{
+    ViewBag.Title = "MovieList";
+}
+
+
+
+<div class="container-fluid">
+    <form id="movieform" class="row g-3" method="post" action="AddMovie" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="col-md-6">
+            <input type="hidden" id="mId" name="mid" value="" />
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.Name, new { @class = "form-label" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control mname" } })
+                <div class="text-danger name-error">
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.Description, new { @class = "form-label" })
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control mdesc", @cols = 35, @rows = 3 } })
+            </div>
+            <div class="col-md-12">
+                <label for="movieImage" class="form-label">Image</label>
+                <input type="file" name="movieImage" id="imginput" class="form-control" value="" />
+            </div>
+            <div class="col-md-12">
+                @Html.ValidationSummary(true)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="~/movieposterimg/movie-poster-temp.jpg" class="movie-img" alt="IMAGE-PREVIEW" style="width:200px; height:260px;" />
+        </div>
+        
+        <div class="col-md-12 mt-3">
+            <button class="btn btn-primary submit-form">ADD</button>
+            <a id="cancel-submit" class="btn btn-primary d-none">CANCEL</a>
+        </div>
+    </form>
+        <div id="_listofmovies" class="mt-5"></div>
+    
+</div>
+<div class="modal" id="schedmodal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title movie-title-modal">Schedules</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="movieID" class="movie-id" name="mId" />
+                <div id="_listofschedules" class="mt-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary save-schedule">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $("#_listofmovies").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+    $("#_listofmovies").load("/adminpartial/_MovieList");
+    $("#cancel-submit").click(function () {
+        $('#movieform')[0].reset();
+        $('.movie-img').attr("src", "");
+        $('.movie-img').attr("alt", "IMAGE-PREVIEW");
+        $('#movieform').attr("action", "AddMovie");
+        $('.submit-form').text("Add");
+        $(this).addClass("d-none");
+    });
+    $(".submit-form").click(function () {
+        let submit = $(this);
+        submit.prop('disabled', true);
+        $('#imginput').removeClass('border-danger');
+        if ($('.mname').val() == "") {
+            submit.prop('disabled', false);
+            return false;
+        }
+        if ($('#imginput').get(0).files.length == 0) {
+            submit.prop('disabled', false);
+            $('#imginput').addClass('border-danger');
+            return false;
+        }
+        $('#movieform').submit();
+    });
+    $(".save-schedule").click(function () {
+        clearimg($('.movie-img'));
+        let err = "";
+        let err_elem = $('.form-error');
+        let seat_rows = $('.srows').val();
+        let seats_pr = $('.spr').val();
+        let seat_price = $('.sprice').val();
+        let mid = $('.movie-id').val();
+        let t_starts = [];
+        let t_starts_time = [];
+        let t_ends = [];
+        let t_end_time = [];
+        let proceed, start_stat, end_stat = true;
+        err_elem.addClass("d-none");
+        err_elem.text("");
+        if (seat_rows == 0) {
+            err = "Please input rows";
+        }
+        if (seat_rows != 0 && seat_rows * seats_pr < 18) {
+            err = "Minimum seats are 18.";
+            proceed = false;
+        }
+        $('.t_start').each(function () {
+            if (!Date.parse($(this).val())) {
+                start_stat = false;
+                proceed = false;
+        } else 
+            t_starts.push($(this).val());
+        })
+        $('.t_end').each(function () {
+            if (!Date.parse($(this).val())) {
+                end_stat = false;
+                proceed = false;
+            } else
+            t_ends.push($(this).val());
+        })
+        if (start_stat == false || end_stat == false) {
+            err += "\nPlease fill in all the time slots"; 
+        }
+        for (var i = 0; i < t_starts.length; i++) {
+            t_starts_time[i] = new Date(t_starts[i]);
+        }
+        for (var i = 0; i < t_starts.length; i++) {
+            t_end_time[i] = new Date(t_ends[i]);
+        }
+        for (var i = 1; i < 5; i++) {
+            if (t_starts_time[i] < t_end_time[i - 1]) {
+                err += "\nstart time cannot be elapsed to the end time of the last schedule.";
+                proceed = false;
+            }
+        }
+        if (proceed == false) {
+            err_elem.removeClass("d-none");
+            err_elem.html(err);
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddMovieSchedules", "Admin")',
+            data: {
+                'starts': t_starts,
+                'ends': t_ends,
+                'srows': seat_rows,
+                'spr': seats_pr,
+                'mId': mid,
+                'seat_price': seat_price
+            },
+            datatype: "json",
+            traditional: true,
+            success: function () {
+                //clearForm('.t_start');
+                //clearForm('.t_end');
+                //$('#schedmodal').modal('toggle');
+                location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("jqXHR:" + jqXHR.status + " errorThrown: " + errorThrown);
+            }
+        });
+    });
+    function clearimg(elem) {
+        $(elem).attr("src", "");
+        $(elem).attr("alt", "IMAGE-PREVIEW");
+    }
+
+</script>
+}

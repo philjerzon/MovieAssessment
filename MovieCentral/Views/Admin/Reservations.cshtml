@@ -1,0 +1,109 @@
+﻿@model IEnumerable<MovieCentral.Models.movieModel>
+@{
+    ViewBag.Title = "Reservations";
+}
+<div class="container-fluid">
+    <div class="row mb-3">
+        
+        <div class="col-md-12 text-end">
+            <form action="/Admin/ExportTable" method="post">
+                <input type="hidden" name="mid" id="movieID" value="" />
+                <input type="submit" value="Export To Excel" class="btn btn-warning export-table"/> 
+                @*<button class="btn btn-primary export-table">Export</button>*@
+            </form>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-2">
+            <select id="movie" class="form-select">
+                <option value="0">--CHOOSE MOVIE--</option>
+                @foreach (var item in Model)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-10 text-end">
+            <button class="btn btn-primary clear-reservation">Clear Selected Reservation</button>
+            <button class="btn btn-primary clear-all-reservation">Clear All Reservation</button>
+        </div>
+    </div>
+    <div id="_reservationlists"></div>
+</div>
+@section scripts{
+    <script>
+        let movieid = 0;
+        $("#_reservationlists").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+        movieid = $("#movie").find(":selected").val();
+        $("#_reservationlists").load("/adminpartial/_getReservations?mid=" + movieid);
+        $("#movieID").val(movieid);
+
+        $("#movie").on('change', function () {
+            $("#_reservationlists").html('<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>');
+            movieid = $(this).find(":selected").val();
+            $("#movieID").val(movieid);
+            $("#_reservationlists").load("/adminpartial/_getReservations?mid=" + movieid);
+        });
+
+        $('.clear-reservation').click(function () {
+            let reservationCheckboxes = new Array();
+            $("input:checked").not('.check-all').each(function () {
+                console.log($(this).val()); //works fine
+                reservationCheckboxes.push($(this).val());
+                console.log(reservationCheckboxes);
+            });
+            if (reservationCheckboxes.length > 0) {
+                if (confirm("clear selected reservations?Reservations that are already elapsed will not be cleared") == true) {
+                    $.ajax({
+                        url: '@Url.Action("clearReservations", "Admin")',
+                        type: 'POST',
+                        dataType: "json",
+                        data: JSON.stringify({ reservation_ids: reservationCheckboxes }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            window.location.href = response.redirectToUrl;
+                        }
+                    });
+                }
+            }
+        })
+
+        $('.clear-all-reservation').click(function () {
+            if (confirm("clear all reservations?Reservations that are already elapsed will not be cleared") == true) {
+                let reservationCheckboxes = new Array();
+                $('.rowcheck').each(function () {
+                    console.log($(this).val()); //works fine
+                    reservationCheckboxes.push($(this).val());
+                    console.log(reservationCheckboxes);
+                });
+                $.ajax({
+                    url: '@Url.Action("clearReservations", "Admin")',
+                    type: 'POST',
+                    dataType: "json",
+                    data: JSON.stringify({ reservation_ids: reservationCheckboxes }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        window.location.href = response.redirectToUrl;
+                    }
+                });
+            }
+        })
+        @*$('.export-table').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ExportTable", "Admin")',
+                data: {
+                    'mid': movieid
+                },
+                datatype: "json",
+                traditional: true,
+                success: function () {
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("jqXHR:" + jqXHR.status + " errorThrown: " + errorThrown);
+                }
+            });
+        });*@
+    </script>
+}

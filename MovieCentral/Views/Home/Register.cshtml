@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+
+@using (Html.BeginForm("Register", "Home", FormMethod.Post))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <label for="Username" class="col-sm-2 col-form-label text-white">Username</label>
+                <input type="text" name="Username" class="form-control" id="username" required value="">
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <label for="Username" class="col-sm-2 col-form-label text-white">Name</label>
+                <input type="text" name="cutomername" class="form-control" id="cutomername" required value="">
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <label for="Password" class="col-sm-2 col-form-label text-white">Password</label>
+                <input type="password" name="Password" class="form-control" required id="Password">
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <input type="submit" value="Register" class="form-control mx-auto mt-4 w-25" />
+            </div>
+        </div>
+    </div>
+}  

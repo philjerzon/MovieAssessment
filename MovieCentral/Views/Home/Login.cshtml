@@ -1,0 +1,28 @@
+﻿@model MovieCentral.Models.accountModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <label for="Username" class="col-sm-2 col-form-label text-white">Username</label>
+                <input type="text" name="Username" class="form-control" id="username" value="">
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <label for="Password" class="col-sm-2 col-form-label text-white">Password</label>
+                <input type="password" name="Password" class="form-control" id="Password">
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <input type="submit" value="Login" class="form-control mx-auto mt-4 w-25" />
+            </div>
+            <div class="col-md-6 offset-md-3">
+                <h5 class="text-center text-white mt-3">Don't have an account?<a href="/Home/Register">Register</a></h5>
+            </div>
+        </div>
+    </div>
+}
+
