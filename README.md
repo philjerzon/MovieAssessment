@@ -18,11 +18,10 @@ Admin can use the system to insert,update and export(reservation history into ex
 ### Made with
 
 * HTML5/CSS3/Bootstrap5/JS/JQuery
-* C#
-* ASP.NET WEB APP MVC .Net Framework.
+* C#, ASP.NET Web application, MVC .Net Framework.
 * SQL Server
 
-### Executing program
+### System (overview)
 
 #### Customer
 * Register/Login customer.
@@ -31,8 +30,9 @@ Admin can use the system to insert,update and export(reservation history into ex
 * Confirm reservation.
 #### Admin
 * Login
-* Movie -> add,edit movie info w/ image also and time slots.
-* View/Manage Reservation through reservation history.
+* View/Manage Movie info w/ image, time slots and available seats(rows/seat per row).
+* View/Manage Reservation.
+* Export history of reservations to Excel.
 
 
 ## Authors
