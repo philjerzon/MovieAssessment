@@ -1,7 +1,47 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<div class="container-fluid">
+    <div class="row text-white w-50 mt-5">
+        <div class="col-md-12">
+            <h2 id="project-title">Project Title</h2>
+            <p>Simple Movie Reservation System.</p>
+            <h2 id="description">Description</h2>
+            <p>It is a web-based system. The customers can reserve a seat and cancel the reservation at a suitable time (before the show). Admin can use the system to insert,update and export(reservation history into excel file) data (film description, time slots,reservations) which will update the webpage.</p>
+            <h4 id="getting-started">Getting Started</h4>
+            <h5 id="programs-used">Programs Used</h5>
+            <ul>
+                <li>VS2022</li>
+                <li>SQL Server Management Studio (SSMS)</li>
+                <li>Excel (for viewing)</li>
+            </ul>
+            <h5 id="made-with">Made with</h5>
+            <ul>
+                <li>HTML5/CSS3/Bootstrap5/JS/JQuery</li>
+                <li>C#, ASP.NET Web application, MVC .Net Framework.</li>
+                <li>SQL Server</li>
+            </ul>
+            <h3 id="system-overview">System (overview)</h3>
+            <h4 id="customer">Customer</h4>
+            <ul>
+                <li>Register/Login customer.</li>
+                <li>Select Movies Available (if none = login as admin and add movie info and time slots).</li>
+                <li>Select desired seat location, change schedule for more options.</li>
+                <li>Confirm reservation.</li>
+            </ul>
+            <h5 id="customer">Admin</h5>
+            <ul>
+                <li>Login</li>
+                <li>View/Manage Movie info w/ image, time slots and available seats(rows/seat per row).</li>
+                <li>View/Manage Reservation.</li>
+                <li>Export history of reservations to Excel.</li>
+            </ul>
+            <h3 id="authors">Authors</h3>
+            <p>Philip Dameg <a href="https://twitter.com/jerzondee"><span class="citation" data-cites="Jerzondee">[@@Jerzondee]</span></a></p>
+        </div>
+    </div>
+    <div class="row my-5">
+
+    </div>
+</div>

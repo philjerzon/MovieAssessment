@@ -21,7 +21,7 @@ namespace MovieCentral.Functions
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             HttpCookie cookie = filterContext.HttpContext.Request.Cookies["_usr"];
-
+           
             if (cookie == null)
             {
                 RedirectUser(filterContext);

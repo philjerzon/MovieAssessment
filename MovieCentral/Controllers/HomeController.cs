@@ -9,17 +9,18 @@ using System.Web.Mvc;
 
 namespace MovieCentral.Controllers
 {
-    [UserSecurity]
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
             return View();
         }
+        [UserSecurity]
         public ActionResult Movie()
         {
             return View();
         }
+        [UserSecurity]
         public ActionResult Reservation(int mid,int schedid)
         {
             DateTime now = DateTime.Now;
@@ -77,7 +78,7 @@ namespace MovieCentral.Controllers
                 return Json(new { redirectToUrl = Url.Action("Index", "Home") });
             }
         }
-
+        [UserSecurity]
         public ActionResult MyReservation(int user_id)
         {
             using (dbContext _db = new dbContext())
@@ -128,7 +129,7 @@ namespace MovieCentral.Controllers
                         seat_ids += reservation_info.SeatIds + ',';
                         if (reservation_info != null)
                         {
-                            _db.reservations.Remove(reservation_info);
+                            reservation_info.HasReserved = 0;
                             _db.SaveChanges();
                         }
                     }
@@ -147,7 +148,7 @@ namespace MovieCentral.Controllers
         }
         public ActionResult Register()
         {
-            if (Request.Cookies != null)
+            if (Request.Cookies["_usr"] != null)
             {
                 return RedirectToAction("Index");
             }
@@ -194,7 +195,7 @@ namespace MovieCentral.Controllers
         }
         public ActionResult Login(accountModel objUser)
         {
-            if (Request.Cookies != null)
+            if (Request.Cookies["_usr"] != null)
             {
                 return RedirectToAction("Index");
             }
@@ -257,10 +258,8 @@ namespace MovieCentral.Controllers
             Response.Cookies["_usr"].Expires = DateTime.Now.AddDays(-1);
             return RedirectToAction("Login");
         }
-        public ActionResult Contact()
+        public ActionResult About()
         {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }

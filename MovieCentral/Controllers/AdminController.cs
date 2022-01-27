@@ -182,7 +182,7 @@ namespace MovieCentral.Controllers
                         seat_ids += reservation_info.SeatIds + ',';
                         if (reservation_info != null)
                         {
-                            _db.reservations.Remove(reservation_info);
+                            reservation_info.HasReserved = 0;
                             _db.SaveChanges();
                         }
                     }
