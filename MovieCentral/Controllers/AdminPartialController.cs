@@ -89,7 +89,7 @@ namespace MovieCentral.Controllers
                                                show_time = ms.TimeStart,
                                                reservation_date = r.ReservationDate,
                                                customer = c.Name,
-                                               status = ms.TimeStart<DateTime.Now ? 2: r.HasReserved
+                                               status = ms.TimeStart<DateTime.Now&&r.HasReserved == 1 ? 2: r.HasReserved
                                            }).ToList();
                         myreslists.AddRange(res_details);
                     }

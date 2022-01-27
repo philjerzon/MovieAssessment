@@ -102,7 +102,7 @@ namespace MovieCentral.Controllers
                                            reserved_seat_ids = r.SeatIds,
                                            show_time = ms.TimeStart,
                                            reservation_date = r.ReservationDate,
-                                           status = r.HasReserved
+                                           status = ms.TimeStart < DateTime.Now && r.HasReserved == 1 ? 2 : r.HasReserved
                                        }).ToList();
                     myreslists.AddRange(res_details);
                 }

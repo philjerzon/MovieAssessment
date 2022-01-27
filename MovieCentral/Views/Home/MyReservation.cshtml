@@ -32,7 +32,7 @@
                 <tr>
                     <th scope="row">
                         <div class="form-check">
-                            @if (item.show_time < DateTime.Now)
+                            @if (item.show_time < DateTime.Now || item.status == 2)
                             {
                                 <input class="form-check-input rowcheck-disabled" type="checkbox" disabled value="">
                             }
