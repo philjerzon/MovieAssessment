@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace MovieCentral.Controllers
 {
+    [UserSecurity]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -146,6 +147,10 @@ namespace MovieCentral.Controllers
         }
         public ActionResult Register()
         {
+            if (Request.Cookies != null)
+            {
+                return RedirectToAction("Index");
+            }
             return View();
         }
 
@@ -189,6 +194,10 @@ namespace MovieCentral.Controllers
         }
         public ActionResult Login(accountModel objUser)
         {
+            if (Request.Cookies != null)
+            {
+                return RedirectToAction("Index");
+            }
             if (ModelState.IsValid)
             {
                 using (dbContext _db = new dbContext())

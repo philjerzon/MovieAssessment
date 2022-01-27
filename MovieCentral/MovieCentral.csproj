@@ -172,16 +172,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="movieposterimg\Eternals.jpg" />
     <Content Include="movieposterimg\EternalsCarousel.jpg" />
-    <Content Include="movieposterimg\EternalsPH.jpg" />
-    <Content Include="movieposterimg\EternalsPH240122022645.jpg" />
-    <Content Include="movieposterimg\EternalsPH240122061832.jpg" />
     <Content Include="movieposterimg\expendables2.jpg" />
-    <Content Include="movieposterimg\Expendables2Poster.jpg" />
-    <Content Include="movieposterimg\Expendables2Poster240122022955.jpg" />
-    <Content Include="movieposterimg\Expendables2Poster240122095300.jpg" />
     <Content Include="movieposterimg\MKPoster.jpg" />
-    <Content Include="movieposterimg\MKPoster240122022841.jpg" />
-    <Content Include="movieposterimg\MKPoster240122070727.jpg" />
     <Content Include="movieposterimg\MortalKombat.jpg" />
     <Content Include="movieposterimg\movie-poster-temp.jpg" />
     <Content Include="Scripts\bootstrap.js" />
@@ -242,6 +234,7 @@
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\MyReservation.cshtml" />
     <Content Include="Views\AdminPartial\_getReservations.cshtml" />
+    <Content Include="sql\MovieCentral.bak" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
